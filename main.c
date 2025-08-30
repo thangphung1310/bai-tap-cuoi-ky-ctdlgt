@@ -8,6 +8,14 @@ typedef struct Node {
     struct Node* right;
 } Node;
 
+void printNodeValue(int value) {
+    if (value < 0) {
+        printf("(%d)", value);
+    } else {
+        printf("%d", value);
+    }
+}
+
 Node* createNode(int data) {
     Node* newNode = (Node*)malloc(sizeof(Node));
     if (newNode == NULL) {
@@ -32,45 +40,40 @@ Node* insertBST(Node* root, int data) {
     return root;
 }
 
-  void printTreeASCII(Node* root, char* prefix, int isLast) {
-      if (root == NULL) return;
-      printf("%s", prefix);
-      printf("+- ");
-      if (root->data < 0) {
-          printf("(%d)\n", root->data);
-      } else {
-          printf("%d\n", root->data);
-      }
-      char newPrefix[1000];
-      strcpy(newPrefix, prefix);
-      strcat(newPrefix, isLast ? "   " : "|  ");
-      int hasLeft = (root->left != NULL);
-      int hasRight = (root->right != NULL);
-      if (hasLeft) {
-          printTreeASCII(root->left, newPrefix, !hasRight);
-      }
-      if (hasRight) {
-          printTreeASCII(root->right, newPrefix, 1);
-      }
-  }
+void drawNode(Node* root, char* prefix, int isLast) {
+    if (root == NULL) return;
+    printf("%s", prefix);
+    printf("+- ");
+    printNodeValue(root->data);
+    printf("\n");
+    
+    char newPrefix[1000];
+    strcpy(newPrefix, prefix);
+    strcat(newPrefix, isLast ? "   " : "|  ");
+    int hasLeft = (root->left != NULL);
+    int hasRight = (root->right != NULL);
+    if (hasLeft) {
+        drawNode(root->left, newPrefix, !hasRight);
+    }
+    if (hasRight) {
+        drawNode(root->right, newPrefix, 1);
+    }
+}
 
 void drawTree(Node* root) {
     if (root == NULL) {
         printf("Cay rong!\n");
         return;
     }
-    if (root->data < 0) {
-        printf("(%d)\n", root->data);
-    } else {
-        printf("%d\n", root->data);
-    }
+    printNodeValue(root->data);
+    printf("\n");
     int hasLeft = (root->left != NULL);
     int hasRight = (root->right != NULL);
     if (hasLeft) {
-        printTreeASCII(root->left, "", !hasRight);
+        drawNode(root->left, "", !hasRight);
     }
     if (hasRight) {
-        printTreeASCII(root->right, "", 1);
+        drawNode(root->right, "", 1);
     }
 }
 
@@ -83,11 +86,8 @@ void freeTree(Node* root) {
 
 void duyetNLR(Node* root) {
     if (root == NULL) return;
-    if (root->data < 0) {
-        printf("(%d) ", root->data);
-    } else {
-        printf("%d ", root->data);
-    }
+    printNodeValue(root->data);
+    printf(" ");
     duyetNLR(root->left);
     duyetNLR(root->right);
 }
@@ -95,11 +95,8 @@ void duyetNLR(Node* root) {
 void duyetLNR(Node* root) {
     if (root == NULL) return;
     duyetLNR(root->left);
-    if (root->data < 0) {
-        printf("(%d) ", root->data);
-    } else {
-        printf("%d ", root->data);
-    }
+    printNodeValue(root->data);
+    printf(" ");
     duyetLNR(root->right);
 }
 
@@ -107,11 +104,8 @@ void duyetLRN(Node* root) {
     if (root == NULL) return;
     duyetLRN(root->left);
     duyetLRN(root->right);
-    if (root->data < 0) {
-        printf("(%d) ", root->data);
-    } else {
-        printf("%d ", root->data);
-    }
+    printNodeValue(root->data);
+    printf(" ");
 }
 
 Node* searchBST(Node* root, int x) {
@@ -160,6 +154,16 @@ int countNodes(Node* root) {
     return 1 + countNodes(root->left) + countNodes(root->right);
 }
 
+int getValidInt(const char* prompt) {
+    int value;
+    printf("%s", prompt);
+    while (scanf("%d", &value) != 1) {
+        printf("Gia tri khong hop le! Vui long nhap lai: ");
+        while (getchar() != '\n');
+    }
+    return value;
+}
+
 int main() {
     Node* root = NULL;
     int choice;
@@ -181,22 +185,18 @@ int main() {
             case 1: {
                 freeTree(root);
                 root = NULL;
-                int n, val;
-                printf("Nhap so luong phan tu: ");
-                scanf("%d", &n);
+                int n = getValidInt("Nhap so luong phan tu: ");
                 printf("Nhap cac gia tri:\n");
                 for (int i = 0; i < n; i++) {
-                    scanf("%d", &val);
+                    int val = getValidInt("");
                     root = insertBST(root, val);
                 }
                 break;
             }
             case 2: {
-                int val;
-                printf("Nhap gia tri can them: ");
-                scanf("%d", &val);
+                int val = getValidInt("Nhap gia tri can them: ");
                 root = insertBST(root, val);
-                printf("Da them gia tri %d vao cay.\n", val);
+                drawTree(root);
                 break;
             }
             case 3:
@@ -215,9 +215,7 @@ int main() {
                 printf("\n");
                 break;
             case 6: {
-                int x;
-                printf("Nhap gia tri can tim: ");
-                scanf("%d", &x);
+                int x = getValidInt("Nhap gia tri can tim: ");
                 Node* found = searchBST(root, x);
                 if (found) {
                     printf("Tim thay node co gia tri: %d, dia chi: %p\n", found->data, (void*)found);
@@ -227,13 +225,11 @@ int main() {
                 break;
             }
             case 7: {
-                int x;
-                printf("Nhap gia tri can xoa: ");
-                scanf("%d", &x);
+                int x = getValidInt("Nhap gia tri can xoa: ");
                 Node* found = searchBST(root, x);
                 if (found) {
                     root = deleteNode(root, x);
-                    printf("Da xoa node co gia tri: %d\n", x);
+                    drawTree(root);
                 } else {
                     printf("Khong tim thay node co gia tri: %d\n", x);
                 }
@@ -255,6 +251,8 @@ int main() {
                 printf("Da xoa cay va giai phong bo nho.\n");
                 break;
             case 0:
+                freeTree(root);
+                root = NULL;
                 printf("Ket thuc chuong trinh.\n");
                 break;
             default:
