@@ -165,14 +165,15 @@ int main() {
     int choice;
     do {
         printf("1. Nhap du lieu tao cay BST\n");
-        printf("2. Duyet NLR\n");
-        printf("3. Duyet LNR\n");
-        printf("4. Duyet LRN\n");
-        printf("5. Tim kiem phan tu trong cay\n");
-        printf("6. Xoa node\n");
-        printf("7. Ve cay BST\n");
-        printf("8. Tinh chieu cao & dem so node\n");
-        printf("9. Xoa cay va giai phong bo nho\n");
+        printf("2. Them 1 phan tu vao cay hien co\n");
+        printf("3. Duyet NLR\n");
+        printf("4. Duyet LNR\n");
+        printf("5. Duyet LRN\n");
+        printf("6. Tim kiem phan tu trong cay\n");
+        printf("7. Xoa node\n");
+        printf("8. Ve cay BST\n");
+        printf("9. Tinh chieu cao & dem so node\n");
+        printf("10. Xoa cay va giai phong bo nho\n");
         printf("0. Thoat\n");
         printf("Chon chuc nang: ");
         scanf("%d", &choice);
@@ -190,22 +191,30 @@ int main() {
                 }
                 break;
             }
-            case 2:
+            case 2: {
+                int val;
+                printf("Nhap gia tri can them: ");
+                scanf("%d", &val);
+                root = insertBST(root, val);
+                printf("Da them gia tri %d vao cay.\n", val);
+                break;
+            }
+            case 3:
                 printf("Duyet NLR: ");
                 duyetNLR(root);
                 printf("\n");
                 break;
-            case 3:
+            case 4:
                 printf("Duyet LNR: ");
                 duyetLNR(root);
                 printf("\n");
                 break;
-            case 4:
+            case 5:
                 printf("Duyet LRN: ");
                 duyetLRN(root);
                 printf("\n");
                 break;
-            case 5: {
+            case 6: {
                 int x;
                 printf("Nhap gia tri can tim: ");
                 scanf("%d", &x);
@@ -217,7 +226,7 @@ int main() {
                 }
                 break;
             }
-            case 6: {
+            case 7: {
                 int x;
                 printf("Nhap gia tri can xoa: ");
                 scanf("%d", &x);
@@ -230,17 +239,17 @@ int main() {
                 }
                 break;
             }
-            case 7:
+            case 8:
                 drawTree(root);
                 break;
-            case 8: {
+            case 9: {
                 int height = treeHeight(root);
                 int count = countNodes(root);
                 printf("Chieu cao cua cay: %d\n", height);
                 printf("Tong so node: %d\n", count);
                 break;
             }
-            case 9:
+            case 10:
                 freeTree(root);
                 root = NULL;
                 printf("Da xoa cay va giai phong bo nho.\n");
